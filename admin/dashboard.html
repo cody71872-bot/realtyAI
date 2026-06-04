@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealtyAI Admin Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; color: #333; }
+        header { background-color: #007bff; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .tab-button { padding: 0.75rem 1.5rem; background-color: #e9ecef; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .tab-button.active { background-color: #007bff; color: white; }
+        .tab-content { display: none; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tab-content.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; }
+        .error-msg { color: #dc3545; font-weight: bold; margin-top: 1rem; }
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: white; padding: 2rem; border-radius: 8px; text-align: center; }
+        input[type="password"] { padding: 10px; width: 200px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 1rem; }
+        button#login-btn { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <input type="password" id="admin-pass" placeholder="Enter Password">
+            <br>
+            <button id="login-btn">Login</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>RealtyAI Admin</h1>
+        <div id="agent-info">Agent Dashboard</div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('leads')">Leads</button>
+            <button class="tab-button" onclick="showTab('visitors')">Open House Visitors</button>
+            <button class="tab-button" onclick="showTab('content')">Generated Content</button>
+        </div>
+
+        <div id="leads" class="tab-content active">
+            <h2>Recent Leads</h2>
+            <div id="leads-list">Loading...</div>
+        </div>
+
+        <div id="visitors" class="tab-content">
+            <h2>Open House Visitors</h2>
+            <div id="visitors-list">Loading...</div>
+        </div>
+
+        <div id="content" class="tab-content">
+            <h2>Generated Content</h2>
+            <div id="content-list">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        let adminPassword = '';
+
+        document.getElementById('login-btn').onclick = () => {
+            adminPassword = document.getElementById('admin-pass').value;
+            document.getElementById('login-overlay').style.display = 'none';
+            fetchData();
+        };
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        async function fetchData() {
+            const headers = { 'x-admin-password': adminPassword };
+            
+            // Fetch Leads
+            try {
+                const resLeads = await fetch('/api/admin/leads', { headers });
+                const dataLeads = await resLeads.json();
+                renderTable('leads-list', dataLeads, ['name', 'email', 'phone', 'type', 'budget', 'timeline', 'timestamp']);
+            } catch (e) { document.getElementById('leads-list').innerHTML = '<p class="error-msg">Failed to load leads.</p>'; }
+
+            // Fetch Visitors
+            try {
+                const resVisitors = await fetch('/api/admin/visitors', { headers });
+                const dataVisitors = await resVisitors.json();
+                renderTable('visitors-list', dataVisitors, ['name', 'email', 'phone', 'rentOrOwn', 'timeline', 'timestamp']);
+            } catch (e) { document.getElementById('visitors-list').innerHTML = '<p class="error-msg">Failed to load visitors.</p>'; }
+
+            // Fetch Content
+            try {
+                const resContent = await fetch('/api/admin/content', { headers });
+                const dataContent = await resContent.json();
+                renderTable('content-list', dataContent, ['address', 'price', 'caption', 'timestamp']);
+            } catch (e) { document.getElementById('content-list').innerHTML = '<p class="error-msg">Failed to load content.</p>'; }
+        }
+
+        function renderTable(containerId, data, fields) {
+            const container = document.getElementById(containerId);
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p>No data available. Connect Google Sheets or capture leads to see results here.</p>';
+                return;
+            }
+
+            let html = '<table><thead><tr>';
+            fields.forEach(f => html += `<th>${f.charAt(0).toUpperCase() + f.slice(1)}</th>`);
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr>';
+                fields.forEach(f => html += `<td>${row[f] || '-'}</td>`);
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

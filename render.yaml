@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: realtyai
+    env: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 3000

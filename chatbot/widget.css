@@ -1,0 +1,89 @@
+#realtyai-chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  font-family: Arial, sans-serif;
+}
+
+#realtyai-chat-bubble {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+#realtyai-chat-bubble:hover {
+  transform: scale(1.1);
+}
+
+#realtyai-chat-window {
+  display: none;
+  width: 350px;
+  height: 500px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  flex-direction: column;
+  overflow: hidden;
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+}
+
+#realtyai-chat-header {
+  background: #007bff;
+  color: white;
+  padding: 15px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#realtyai-chat-close {
+  cursor: pointer;
+}
+
+#realtyai-chat-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#realtyai-chat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#realtyai-chat-form input, #realtyai-chat-form select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#realtyai-chat-form button {
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#realtyai-chat-form button:hover {
+  background: #0056b3;
+}
+
+.realtyai-thanks {
+  text-align: center;
+  padding: 20px;
+}

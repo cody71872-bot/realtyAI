@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open House Registration</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; color: #333; text-align: center; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #666; }
+        input, select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.75rem; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 1rem; }
+        button:hover { background: #0056b3; }
+        .thanks { text-align: center; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="form-container">
+            <h1>Welcome! Please Sign In</h1>
+            <form id="openhouse-form">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone">
+                </div>
+                <div class="form-group">
+                    <label>Do you currently...</label>
+                    <select id="currentStatus">
+                        <option value="rent">Rent</option>
+                        <option value="own">Own</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Buying Timeline</label>
+                    <select id="timeline">
+                        <option value="immediate">Immediate</option>
+                        <option value="1-3-months">1-3 Months</option>
+                        <option value="3-6-months">3-6 Months</option>
+                        <option value="6-plus">6+ Months</option>
+                    </select>
+                </div>
+                <button type="submit">Check In</button>
+            </form>
+        </div>
+        <div id="thanks-container" class="thanks">
+            <h1>Thank You!</h1>
+            <p>Enjoy the tour. We'll send you more information about this property shortly.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('openhouse-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                currentStatus: document.getElementById('currentStatus').value,
+                timeline: document.getElementById('timeline').value
+            };
+
+            try {
+                const response = await fetch('/api/openhouse/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('thanks-container').style.display = 'block';
+                } else {
+                    alert('Error submitting form.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Connection error.');
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to RealtyAI - Onboarding</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; color: #333; line-height: 1.6; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header { text-align: center; margin-bottom: 2rem; }
+        h1 { color: #007bff; margin-bottom: 0.5rem; }
+        .tier-badge { display: inline-block; padding: 0.25rem 1rem; border-radius: 20px; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-top: 0.5rem; }
+        .tier-starter { background-color: #e9ecef; color: #495057; }
+        .tier-growth { background-color: #cce5ff; color: #004085; }
+        .tier-pro { background-color: #d4edda; color: #155724; }
+        .checklist { margin-top: 2rem; }
+        .step { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; padding: 1.5rem; border: 1px solid #eee; border-radius: 8px; }
+        .step-icon { font-size: 1.5rem; }
+        .step-content { flex: 1; }
+        .step h3 { margin: 0 0 0.5rem 0; color: #007bff; }
+        code { background: #f8f9fa; padding: 1rem; border-radius: 5px; display: block; white-space: pre-wrap; font-size: 0.9rem; border: 1px solid #ddd; margin-top: 1rem; }
+        .qr-preview { margin-top: 1rem; text-align: center; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 1rem; }
+        .btn:hover { background-color: #0056b3; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Welcome to RealtyAI!</h1>
+            <p>Your AI-powered real estate automation system is ready.</p>
+            <div id="tier-display" class="tier-badge">Tier: Loading...</div>
+        </header>
+
+        <div class="checklist">
+            <div class="step">
+                <div class="step-icon">✅</div>
+                <div class="step-content">
+                    <h3>1. Account Active</h3>
+                    <p>Your subscription is active and your workspace is provisioned.</p>
+                </div>
+            </div>
+
+            <!-- Chatbot Step (All Tiers) -->
+            <div id="step-chatbot" class="step">
+                <div class="step-icon">📋</div>
+                <div class="step-content">
+                    <h3>2. Install the Chatbot</h3>
+                    <p>Copy and paste this script into your website's <code>&lt;head&gt;</code> tag to start capturing leads instantly.</p>
+                    <code id="chatbot-code">&lt;script src="https://realtyai.com/widget/chatbot.js" data-agent-name="Your Name"&gt;&lt;/script&gt;</code>
+                </div>
+            </div>
+
+            <!-- QR Code Step (Growth & Pro) -->
+            <div id="step-qr" class="step hidden">
+                <div class="step-icon">📱</div>
+                <div class="step-content">
+                    <h3>3. Your Open House QR Code</h3>
+                    <p>Print this QR code and display it at your open houses. Visitors can scan it to register instantly.</p>
+                    <div class="qr-preview">
+                        <img id="qr-image" src="" alt="Open House QR">
+                        <br>
+                        <a id="qr-download" href="" target="_blank" class="btn">Download QR Code</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Gen Step (Pro Only) -->
+            <div id="step-content" class="step hidden">
+                <div class="step-icon">📝</div>
+                <div class="step-content">
+                    <h3>4. Listing Content Generator</h3>
+                    <p>Generate professional social media captions, story scripts, and newsletters for your listings.</p>
+                    <a href="/content/form" class="btn">Go to Content Generator</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="/admin" class="btn" style="background-color: #6c757d;">Visit Agent Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tier = urlParams.get('tier') || 'pro';
+        const agentName = urlParams.get('name') || 'Your Name';
+
+        // Update Tier Display
+        const tierDisplay = document.getElementById('tier-display');
+        tierDisplay.innerText = `Tier: ${tier}`;
+        tierDisplay.classList.add(`tier-${tier}`);
+
+        // Update Chatbot Code
+        document.getElementById('chatbot-code').innerText = `<script src="${window.location.origin}/widget/chatbot.js" data-agent-name="${agentName}"><\/script>`;
+
+        // Dynamic Visibility
+        if (tier === 'growth' || tier === 'pro') {
+            document.getElementById('step-qr').classList.remove('hidden');
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(window.location.origin + '/openhouse/form')}`;
+            document.getElementById('qr-image').src = qrUrl;
+            document.getElementById('qr-download').href = qrUrl;
+        }
+
+        if (tier === 'pro') {
+            document.getElementById('step-content').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
