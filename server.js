@@ -160,6 +160,9 @@ app.get('/api/admin/content', (req, res) => {
 app.get('/openhouse/form', (req, res) => {
   res.sendFile(path.join(__dirname, 'openhouse', 'form.html'));
 });
+app.get('/openhouse/form.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'openhouse', 'form.html'));
+});
 
 app.get('/content/form', (req, res) => {
   res.sendFile(path.join(__dirname, 'content-gen', 'form.html'));
