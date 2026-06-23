@@ -1,4 +1,4 @@
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   // Inject CSS
   const link = document.createElement('link');
   link.rel = 'stylesheet';
@@ -85,4 +85,4 @@
       alert('Error connecting to server.');
     }
   };
-})();
+}];
