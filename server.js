@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     <html>
     <head>
       <title>RealtyAI</title>
-      <script src="https://realtyai-production.up.railway.app/widget/chatbot.js data-agent-name="RealtyAI Demo"></script>
+      <script src="https://realtyai-production.up.railway.app/widget/chatbot.js"></script>
     </head>
     <body>
       <h1>Welcome to RealtyAI</h1>
