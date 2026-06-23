@@ -83,6 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (err) {
       console.error('RealtyAI Error:', err);
       alert('Error connecting to server.');
-    }
-  };
-}];
+}
+     };
+});
