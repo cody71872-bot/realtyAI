@@ -17,7 +17,21 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-
+// Homepage
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>RealtyAI</title>
+      <script src="/widget/chatbot.js" data-agent-name="RealtyAI Demo"></script>
+    </head>
+    <body>
+      <h1>Welcome to RealtyAI</h1>
+    </body>
+    </html>
+  `);
+});
 // Health Check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
